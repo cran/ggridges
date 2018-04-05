@@ -13,8 +13,9 @@ geom_ridgeline_gradient(mapping = NULL, data = NULL, stat = "identity",
   show.legend = NA, inherit.aes = TRUE, ...)
 
 geom_density_ridges_gradient(mapping = NULL, data = NULL,
-  stat = "density_ridges", panel_scaling = TRUE, na.rm = TRUE,
-  gradient_lwd = 0.5, show.legend = NA, inherit.aes = TRUE, ...)
+  stat = "density_ridges", position = "points_sina", panel_scaling = TRUE,
+  na.rm = TRUE, gradient_lwd = 0.5, show.legend = NA,
+  inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -69,6 +70,8 @@ these geoms should be considered experimental. Don't use them unless you really 
 in R's graphics system, transparency (\code{alpha}) has to be disabled for gradient fills.
 }
 \examples{
+library(ggplot2)
+
 # Example for `geom_ridgeline_gradient()`
 library(viridis)
 d <- data.frame(x = rep(1:5, 3) + c(rep(0, 5), rep(0.3, 5), rep(0.6, 5)),
