@@ -13,13 +13,17 @@
 #' @param jittered_points If `TRUE`, carries the original point data over to the processed data frame,
 #'   so that individual points can be drawn by the various ridgeline geoms. The specific position of these
 #'   points is controlled by various position objects, e.g. [`position_points_sina()`] or [`position_raincloud()`].
-#' @param quantile_lines If `TRUE`, enables the drawing of quantile lines.
+#' @param quantile_lines If `TRUE`, enables the drawing of quantile lines. Overrides the `calc_ecdf` setting
+#'   and sets it to `TRUE`.
 #' @param calc_ecdf If `TRUE`, `stat_density_ridges` calculates an empirical cumulative distribution function (ecdf)
 #'   and returns a variable `ecdf` and a variable `quantile`. Both can be mapped onto aesthetics via
 #'   `..ecdf..` and `..quantile..`, respectively.
 #' @param quantiles Sets the number of quantiles the data should be broken into. Used if either `calc_ecdf = TRUE`
 #'   or `quantile_lines = TRUE`. If `quantiles` is an integer then the data will be cut into that many equal quantiles.
 #'   If it is a vector of probabilities then the data will cut by them.
+#' @param quantile_fun Function that calculates quantiles. The function needs to accept two parameters,
+#'   a vector `x` holding the raw data values and a vector `probs` providing the probabilities that
+#'   define the quantiles. Default is `quantile`.
 #' @inheritParams geom_ridgeline
 #' @importFrom ggplot2 layer
 #' @examples
@@ -39,18 +43,18 @@
 #'   scale_y_discrete(expand = c(0.01, 0))
 #'
 #' ggplot(iris, aes(x=Sepal.Length, y=Species, fill=factor(..quantile..))) +
-#'   stat_density_ridges(geom = "density_ridges_gradient", calc_ecdf = TRUE,
-#'                       quantiles = c(0.05, 0.95)) +
-#'   scale_fill_manual(name = "Probability\nranges",
-#'                     values = c("red", "grey80", "blue")) +
+#'   stat_density_ridges(geom = "density_ridges_gradient",
+#'                       calc_ecdf = TRUE, quantiles = c(0.025, 0.975)) +
+#'   scale_fill_manual(name = "Probability",
+#'                     values = c("#FF0000A0", "#A0A0A0A0", "#0000FFA0"),
+#'                     labels = c("(0, 0.025]", "(0.025, 0.975]", "(0.975, 1]")) +
 #'   theme_ridges() + scale_y_discrete(expand = c(0.01, 0))
-#'
 #' @export
 stat_density_ridges <- function(mapping = NULL, data = NULL, geom = "density_ridges",
                      position = "identity", na.rm = FALSE, show.legend = NA,
                      inherit.aes = TRUE, bandwidth = NULL, from = NULL, to = NULL,
                      jittered_points = FALSE, quantile_lines = FALSE, calc_ecdf = FALSE, quantiles = 4,
-                     ...)
+                     quantile_fun = quantile, ...)
 {
   layer(
     stat = StatDensityRidges,
@@ -67,6 +71,7 @@ stat_density_ridges <- function(mapping = NULL, data = NULL, geom = "density_rid
                   quantiles = quantiles,
                   jittered_points = jittered_points,
                   quantile_lines = quantile_lines,
+                  quantile_fun = quantile_fun,
                   na.rm = na.rm, ...)
   )
 }
@@ -130,6 +135,10 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
       params$quantiles <- 4
     }
 
+    if (is.null(params$quantile_fun)) {
+      params$quantile_fun <- quantile
+    }
+
     if (length(params$quantiles) > 1 &&
         (max(params$quantiles, na.rm = TRUE) > 1 || min(params$quantiles, na.rm = TRUE) < 0)) {
       stop('invalid quantiles used: c(', paste0(params$quantiles, collapse = ','), ') must be within [0, 1] range')
@@ -143,19 +152,25 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
       jittered_points = params$jittered_points,
       quantile_lines = params$quantile_lines,
       quantiles = params$quantiles,
+      quantile_fun = params$quantile_fun,
       na.rm = params$na.rm
     )
   },
 
   compute_group = function(data, scales, from, to, bandwidth = 1,
                            calc_ecdf = FALSE, jittered_points = FALSE, quantile_lines = FALSE,
-                           quantiles = 4) {
+                           quantiles = 4, quantile_fun = quantile) {
     # ignore too small groups
     if(nrow(data) < 3) return(data.frame())
 
     if (is.null(calc_ecdf)) calc_ecdf <- FALSE
     if (is.null(jittered_points)) jittered_points <- FALSE
     if (is.null(quantile_lines)) quantile_lines <- FALSE
+
+    # when quantile lines are requested, we also calculate ecdf
+    # this simplifies things for now; in principle, could disentangle
+    # the two
+    if (quantile_lines) calc_ecdf <- TRUE
 
     panel <- unique(data$PANEL)
     if (length(panel) > 1) {
@@ -164,6 +179,9 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
     panel_id <- as.numeric(panel)
 
     d <- density(data$x, bw = bandwidth[panel_id], from = from[panel_id], to = to[panel_id], na.rm = TRUE)
+
+    # calculate maximum density for scaling
+    maxdens <- max(d$y, na.rm = TRUE)
 
     # make interpolating function for density line
     densf <- approxfun(d$x, d$y, rule = 2)
@@ -174,6 +192,7 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
         x = data$x,
         # actual jittering is handled in the position argument
         density = densf(data$x),
+        ndensity = densf(data$x) / maxdens,
         datatype = "point", stringsAsFactors = FALSE)
 
       # see if we need to carry over other point data
@@ -210,15 +229,20 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
       probs <- quantiles
       probs[probs < 0 | probs > 1] <- NA
     }
-    qx <- na.omit(quantile(data$x, probs))
+    qx <- na.omit(quantile_fun(data$x, probs = probs))
 
     # if requested, add data frame for quantile lines
     df_quantiles <- NULL
 
     if (quantile_lines && length(qx) > 0) {
       qy <- densf(qx)
-      df_quantiles <- data.frame(x = qx, density = qy, datatype = "vline",
-                                 stringsAsFactors = FALSE)
+      df_quantiles <- data.frame(
+        x = qx,
+        density = qy,
+        ndensity = qy / maxdens,
+        datatype = "vline",
+        stringsAsFactors = FALSE
+      )
       if (!is.null(df_points_dummy)){
         # add in dummy points data if necessary
         df_quantiles <- data.frame(df_quantiles, as.list(df_points_dummy))
@@ -231,17 +255,22 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
     if (calc_ecdf) {
       n <- length(d$x)
       ecdf <- c(0, cumsum(d$y[1:(n-1)]*(d$x[2:n]-d$x[1:(n-1)])))
-      ntile <- findInterval(d$x, qx, left.open = TRUE) + 1
+      ecdf_fun <- approxfun(d$x, ecdf, rule = 2)
+      ntile <- findInterval(d$x, qx, left.open = TRUE) + 1 # if make changes here, make them also below
 
       if (!is.null(df_nondens)) {
-        # we add dummy data for ecdf and quantile
-        # if we don't do this, the autogenerated legend can be off
-        df_nondens <- data.frame(df_nondens, ecdf = ecdf[1], quantile = ntile[1])
+        # we add data for ecdf and quantiles back to all other data points
+        df_nondens <- data.frame(
+          df_nondens,
+          ecdf = ecdf_fun(df_nondens$x),
+          quantile = findInterval(df_nondens$x, qx, left.open = TRUE) + 1
+        )
       }
 
       df_density <- data.frame(
         x = d$x,
         density = d$y,
+        ndensity = d$y / maxdens,
         ecdf = ecdf,
         quantile = ntile,
         datatype = "ridgeline",
@@ -249,7 +278,13 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
       )
     }
     else {
-      df_density <- data.frame(x = d$x, density = d$y, datatype = "ridgeline", stringsAsFactors = FALSE)
+      df_density <- data.frame(
+        x = d$x,
+        density = d$y,
+        ndensity = d$y / maxdens,
+        datatype = "ridgeline",
+        stringsAsFactors = FALSE
+      )
     }
 
     if (!is.null(df_points_dummy)){
@@ -257,8 +292,13 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
       df_density <- data.frame(df_density, as.list(df_points_dummy))
     }
 
-    # now combine everything and return
-    rbind(df_density, df_nondens)
+    # now combine everything and turn quantiles into factor
+    df_final <- rbind(df_density, df_nondens)
+    if ("quantile" %in% names(df_final)) {
+      df_final$quantile <- factor(df_final$quantile)
+    }
+
+    df_final
   }
 )
 
@@ -313,6 +353,7 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
 #'   scale_y_discrete(expand = c(0.01, 0)) +
 #'   scale_fill_cyclical(values = c("#0000B0", "#7070D0")) +
 #'   guides(y = "none")
+#' @importFrom stats quantile
 #' @export
 stat_binline <- function(mapping = NULL, data = NULL,
                      geom = "density_ridges", position = "identity",

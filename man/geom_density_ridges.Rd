@@ -8,13 +8,15 @@
 \alias{GeomDensityRidges2}
 \title{Create ridgeline plot}
 \usage{
-geom_density_ridges(mapping = NULL, data = NULL, stat = "density_ridges",
-  position = "points_sina", panel_scaling = TRUE, na.rm = FALSE,
-  show.legend = NA, inherit.aes = TRUE, ...)
+geom_density_ridges(mapping = NULL, data = NULL,
+  stat = "density_ridges", position = "points_sina",
+  panel_scaling = TRUE, na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE, ...)
 
-geom_density_ridges2(mapping = NULL, data = NULL, stat = "density_ridges",
-  position = "points_sina", panel_scaling = TRUE, na.rm = FALSE,
-  show.legend = NA, inherit.aes = TRUE, ...)
+geom_density_ridges2(mapping = NULL, data = NULL,
+  stat = "density_ridges", position = "points_sina",
+  panel_scaling = TRUE, na.rm = FALSE, show.legend = NA,
+  inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -61,8 +63,6 @@ to the paired geom/stat.}
 }
 \description{
 \code{geom_density_ridges} arranges multiple density plots in a staggered fashion, as in the cover of the famous Joy Division album Unknown Pleasures.
-
-\code{geom_density_ridges2} is identical to \code{geom_density_ridges} except it draws closed polygons rather than ridgelines.
 }
 \details{
 By default, this geom calculates densities from the point data mapped onto the x axis. If density calculation is
@@ -93,8 +93,8 @@ even spacing between baselines.
 overall maximum, so \code{rel_min_height=0.01} would remove everything that is 1\% or less than the highest point among all
 ridgelines. Default is 0, so nothing is removed.
 alpha
-\item \code{color}, \code{fill}, \code{group}, \code{alpha}, \code{linetype}, \code{size}, as in \code{\link{geom_ridgeline}}.
-\item \code{point_shape}, \code{point_color}, \code{point_size}, \code{point_fill}, \code{point_alpha}, \code{point_stroke}, as in \code{\link{geom_ridgeline}}.
+\item \code{colour}, \code{fill}, \code{group}, \code{alpha}, \code{linetype}, \code{size}, as in \code{\link{geom_ridgeline}}.
+\item \code{point_shape}, \code{point_colour}, \code{point_size}, \code{point_fill}, \code{point_alpha}, \code{point_stroke}, as in \code{\link{geom_ridgeline}}.
 }
 }
 
@@ -111,8 +111,8 @@ ggplot(iris, aes(x = Sepal.Length, y = Species)) +
 # set the `scale` to determine how much overlap there is among the plots
 ggplot(diamonds, aes(x = price, y = cut)) +
   geom_density_ridges(scale = 4) +
-  scale_y_discrete(expand=c(0.01, 0)) +
-  scale_x_continuous(expand=c(0.01, 0)) +
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
   theme_ridges()
 
 # the same figure with colors, and using the ggplot2 density stat

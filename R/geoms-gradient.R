@@ -83,15 +83,21 @@ GeomRidgelineGradient <- ggproto("GeomRidgelineGradient", Geom,
     color = "black", fill = "grey70", y = 0, size = 0.5, linetype = 1,
     min_height = 0, scale = 1, alpha = NA, datatype = "ridgeline",
 
-    # point aesthetics
-    point_shape = 19, point_color = "black", point_size = 1.5, point_fill = NA,
-    point_alpha = NA, point_stroke = 0.5,
+    # point aesthetics with default
+    point_shape = 19, point_size = 1.5, point_stroke = 0.5,
 
-    # vline aesthetics
-    vline_color = "black", vline_size = 0.5, vline_linetype = 1
+    # point aesthetics, inherited
+    point_colour = NULL, #point_color = NULL,
+    point_fill = NULL, point_alpha = NULL,
+
+    # vline aesthetics, all inherited
+    vline_colour = NULL, #vline_color = NULL,
+    vline_size = NULL, vline_linetype = NULL
   ),
 
   required_aes = c("x", "y", "height"),
+
+  optional_aes = c("point_color", "vline_color"),
 
   extra_params = c("na.rm", "jittered_points"),
 
@@ -128,23 +134,43 @@ GeomRidgelineGradient <- ggproto("GeomRidgelineGradient", Geom,
         linejoin = "mitre"
       ))
 
-    if (is.null(params$jittered_points) || !params$jittered_points) {
-      rect_grob
+    # if vertical lines were drawn then we need to add them to the legend also
+    if (is.null(params$quantile_lines) || !params$quantile_lines) {
+      vlines_grob <- grid::nullGrob()
     }
     else {
-      # if jittered points were drawn then we need to add them to the legend also
+      vlines_grob <- grid::segmentsGrob(0.5, 0.1, 0.5, 0.9,
+        gp = grid::gpar(
+          col = data$vline_colour %||% data$vline_color %||% data$colour,
+          lwd = (data$vline_size %||% data$size) * .pt,
+          lty = data$vline_linetype %||% data$linetype,
+          lineend = "butt"
+        )
+      )
+    }
+
+    # if jittered points were drawn then we need to add them to the legend also
+    if (is.null(params$jittered_points) || !params$jittered_points) {
+      point_grob <- grid::nullGrob()
+    }
+    else {
       point_grob <- grid::pointsGrob(0.5, 0.5,
         pch = data$point_shape,
         gp = grid::gpar(
-          col = alpha(data$point_color, data$point_alpha),
-          fill = alpha(data$point_fill, data$point_alpha),
+          col = alpha(
+            data$point_colour %||% data$point_color %||% data$colour,
+            data$point_alpha %||% data$alpha
+          ),
+          fill = alpha(
+            data$point_fill %||% data$fill,
+            data$point_alpha %||% data$alpha
+          ),
           fontsize = data$point_size * .pt + data$point_stroke * .stroke / 2,
           lwd = data$point_stroke * .stroke / 2
         )
       )
-
-      grid::grobTree(rect_grob, point_grob)
     }
+    grid::grobTree(rect_grob, vlines_grob, point_grob)
   },
 
 
@@ -263,8 +289,14 @@ GeomRidgelineGradient <- ggproto("GeomRidgelineGradient", Geom,
              coords$x, coords$y,
              pch = coords$point_shape,
              gp = grid::gpar(
-               col = alpha(coords$point_color, coords$point_alpha),
-               fill = alpha(coords$point_fill, coords$point_alpha),
+               col = alpha(
+                 data$point_colour %||% data$point_color %||% data$colour,
+                 data$point_alpha %||% data$alpha
+               ),
+               fill = alpha(
+                 data$point_fill %||% data$fill,
+                 data$point_alpha %||% data$alpha
+               ),
                # Stroke is added around the outside of the point
                fontsize = coords$point_size * .pt + coords$point_stroke * .stroke / 2,
                lwd = coords$point_stroke * .stroke / 2
@@ -282,10 +314,10 @@ GeomRidgelineGradient <- ggproto("GeomRidgelineGradient", Geom,
     data$yend <- data$ymax
     data$alpha <- NA
 
-    # copy vline aesthetics over
-    data$colour <- data$vline_color
-    data$linetype <- data$vline_linetype
-    data$size <- data$vline_size
+    # copy vline aesthetics over if set
+    data$colour <- data$vline_colour %||% data$vline_color %||% data$colour
+    data$linetype <- data$vline_linetype %||% data$linetype
+    data$size <- data$vline_size %||% data$size
     ggplot2::GeomSegment$draw_panel(data, panel_params, coord)
   },
 
@@ -392,15 +424,21 @@ GeomDensityRidgesGradient <- ggproto("GeomDensityRidgesGradient", GeomRidgelineG
     color = "black", fill = "grey70", size = 0.5, linetype = 1,
     rel_min_height = 0, scale = 1.8, alpha = NA, datatype = "ridgeline",
 
-    # point aesthetics
-    point_shape = 19, point_color = "black", point_size = 1.5, point_fill = NA,
-    point_alpha = NA, point_stroke = 0.5,
+    # point aesthetics with default
+    point_shape = 19, point_size = 1.5, point_stroke = 0.5,
 
-    # vline aesthetics
-    vline_color = "black", vline_size = 0.5, vline_linetype = 1
+    # point aesthetics, inherited
+    point_colour = NULL,# point_color = NULL,
+    point_fill = NULL, point_alpha = NULL,
+
+    # vline aesthetics, all inherited
+    vline_colour = NULL,# vline_color = NULL,
+    vline_size = NULL, vline_linetype = NULL
   ),
 
   required_aes = c("x", "y", "height"),
+
+  optional_aes = c("point_color", "vline_color"),
 
   extra_params = c("na.rm", "panel_scaling", "jittered_points"),
 
