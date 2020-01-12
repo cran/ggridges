@@ -4,8 +4,13 @@
 \alias{theme_ridges}
 \title{A custom theme specifically for use with ridgeline plots}
 \usage{
-theme_ridges(font_size = 14, font_family = "", line_size = 0.5,
-  grid = TRUE, center_axis_labels = FALSE)
+theme_ridges(
+  font_size = 14,
+  font_family = "",
+  line_size = 0.5,
+  grid = TRUE,
+  center_axis_labels = FALSE
+)
 }
 \arguments{
 \item{font_size}{Overall font size. Default is 14.}
@@ -16,7 +21,7 @@ theme_ridges(font_size = 14, font_family = "", line_size = 0.5,
 
 \item{grid}{If \code{TRUE} (default), a background grid is drawn. If \code{FALSE}, background is left empty.}
 
-\item{center_axis_labels}{If \code{TRUE}, axis lables are drawn centered. If \code{FALSE} (default), axis lables are
+\item{center_axis_labels}{If \code{TRUE}, axis labels are drawn centered. If \code{FALSE} (default), axis lables are
 drawn right/top-aligned.}
 }
 \value{

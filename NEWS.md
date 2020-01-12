@@ -1,3 +1,12 @@
+ggridges 0.5.2
+----------------------------------------------------------------
+- There is now a project website at https://wilkelab.org/ggridges.
+- A new example dataset has been added, `Aus_athletes`.
+- `scale_discrete_manual()` has been removed from the ggridges package,
+  as it has been available in ggplot2 since version 3.0.0.
+- `stat_density_ridges()` now has a parameter `n` that determines at how many
+  points along the x axis the density is estimated.
+
 ggridges 0.5.1
 ----------------------------------------------------------------
 - The `alpha` aesthetic is now by default applied to jittered points. If you don't
@@ -33,7 +42,7 @@ ggridges 0.4.0
   stat_joy -> stat_density_ridges
   theme_joy -> theme_ridges
 
-ggjoy 0.3.0.9000
+ggjoy 0.3.1
 ----------------------------------------------------------------
 - Added an option to center axis labels to `theme_joy()`.
 

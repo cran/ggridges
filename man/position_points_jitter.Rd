@@ -6,11 +6,16 @@
 \alias{PositionPointsJitter}
 \title{Randomly jitter the points in a ridgeline plot}
 \usage{
-position_points_jitter(width = 0, height = 0.2, yoffset = 0,
-  adjust_vlines = FALSE, seed = NULL)
+position_points_jitter(
+  width = 0,
+  height = 0.2,
+  yoffset = 0,
+  adjust_vlines = FALSE,
+  seed = NULL
+)
 }
 \arguments{
-\item{width}{Width for horizonal jittering. By default set to 0.}
+\item{width}{Width for horizontal jittering. By default set to 0.}
 
 \item{height}{Height for vertical jittering, applied in both directions (up and down). By default 0.2.}
 
