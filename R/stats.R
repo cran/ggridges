@@ -299,10 +299,11 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
 #' Works like `stat_bin` except that the output is a ridgeline describing the histogram rather than
 #' a set of counts.
 #'
+#' @param geom The geom to use for drawing.
 #' @param draw_baseline If `FALSE`, removes lines along 0 counts. Defaults to `TRUE`.
 #' @param pad If `TRUE`, adds empty bins at either end of x. This ensures that the binline always goes
 #'   back down to 0. Defaults to `TRUE`.
-#' @inheritParams ggplot2::stat_bin
+#' @inheritParams ggplot2::geom_histogram
 #'
 #' @examples
 #' library(ggplot2)
@@ -330,7 +331,7 @@ StatDensityRidges <- ggproto("StatDensityRidges", Stat,
 #'    scale_y_reverse(expand = c(0, 0)) +
 #'    scale_fill_viridis_d(begin = 0.3, option = "B") +
 #'    coord_cartesian(clip = "off") +
-#'    labs(title = "Movie lengths 1990 - 2005")
+#'    labs(title = "Movie lengths 1990 - 2005") +
 #'    theme_ridges() +
 #'    theme(legend.position = "none")
 #'
