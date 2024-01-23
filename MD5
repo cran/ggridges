@@ -1,7 +1,7 @@
-2e5073a43456fc90964295dfa9392f2a *DESCRIPTION
+5720074ba02c3697e8bd8f5928830bcd *DESCRIPTION
 a23a74b3f4caf9616230789d94217acb *LICENSE
 35ee0e252254477b06165a3522e667ca *NAMESPACE
-0e179b01ab61d2ae8d0d91d73a62436b *NEWS.md
+d7361b13d01241e1a1c5b45f0480a7a1 *NEWS.md
 600f6c999c2a094c8459493c2afbb6ee *R/data.R
 f1c95d269d553f1c91c2c413badc067c *R/geom-density-line.R
 f83bee1536eee1276f618f92ad1ef173 *R/geoms-gradient.R
@@ -24,10 +24,10 @@ ae6a032f21b19edd2822adc7354cab7b *data/Catalan_elections.rda
 e2635efc0fc194d818e9d815160d91b6 *data/lincoln_weather.rda
 610699e98beb8b6bf63809e2d51edf3f *inst/doc/gallery.R
 b0fcee8e73588b1a89f9661040f8c4cd *inst/doc/gallery.Rmd
-72ea940e0a60ce65fa906b302cc70b51 *inst/doc/gallery.html
+fa68894efa6d74f85b50d0371b8f5efd *inst/doc/gallery.html
 c7b79b51ee2e36ec0767ed07a8485734 *inst/doc/introduction.R
 c6dd17bd1b89943776c59c9c85bec8f2 *inst/doc/introduction.Rmd
-d5b9746621dc8387e582e38796d7dd90 *inst/doc/introduction.html
+6219511f3c5e602aad96f3a5e8f04fd9 *inst/doc/introduction.html
 b37805aa13716031a54b667ec2357cdf *man/Aus_athletes.Rd
 99eb5a4f13789baa5727ee75ffe6b3ab *man/Catalan_elections.Rd
 15da9cbfb842a2a1003b980036afb175 *man/figures/README-diamonds-1.png
@@ -72,7 +72,7 @@ d9a7d5e06f4322eac9e14fddf2d6c974 *tests/testthat/helper-vdiffr.R
 7384499684ac2d1b4a2788192aecd22a *tests/testthat/test_geom_density_ridges.R
 8e739d6de46b6e0083b18b54caddd459 *tests/testthat/test_geom_gradient.R
 1fdb92a7f5c0d5927e175b0952ee1aa1 *tests/testthat/test_geom_vridgeline.R
-b89fe73087a27d08631d1d86926a4895 *tests/testthat/test_scale_cyclical.R
+b17d943f749c5b29f2e17aef4137e2a7 *tests/testthat/test_scale_cyclical.R
 c43d6abcb71872b2a2743cd886f6561a *tests/testthat/test_stat_binline.R
 9b0e54d9ac3c769afead970a06ec5ef4 *tests/testthat/test_stat_density_ridges.R
 f88007e2900e87f9d4f80f92e7678499 *tests/testthat/test_theme_ridges.R

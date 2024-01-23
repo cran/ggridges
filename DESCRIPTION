@@ -1,7 +1,7 @@
 Package: ggridges
 Type: Package
 Title: Ridgeline Plots in 'ggplot2'
-Version: 0.5.5
+Version: 0.5.6
 Authors@R: 
     person(
       given = "Claus O.",
@@ -28,8 +28,8 @@ Collate: 'data.R' 'ggridges.R' 'geoms.R' 'geomsv.R' 'geoms-gradient.R'
 RoxygenNote: 7.2.3
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2023-12-14 20:54:13 UTC; clauswilke
+Packaged: 2024-01-23 01:28:20 UTC; clauswilke
 Author: Claus O. Wilke [aut, cre] (<https://orcid.org/0000-0002-7470-9261>)
 Maintainer: Claus O. Wilke <wilke@austin.utexas.edu>
 Repository: CRAN
-Date/Publication: 2023-12-15 05:30:02 UTC
+Date/Publication: 2024-01-23 05:40:10 UTC

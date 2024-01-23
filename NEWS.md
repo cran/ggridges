@@ -1,3 +1,7 @@
+ggridges 0.5.6
+----------------------------------------------------------------
+- fix issues with upcoming ggplot 3.5.0.
+
 ggridges 0.5.5
 ----------------------------------------------------------------
 - Replace `ggplot2::expand_scale()` with `ggplot2::expansion()` in vignettes to avoid deprecation warnings in [ggplot2 0.3.3](https://ggplot2.tidyverse.org/news/index.html#minor-improvements-and-bug-fixes-3-3-0) (@jthomasmock, #78) 
