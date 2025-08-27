@@ -6,7 +6,7 @@
 #'
 #' @name scale_vline
 #' @seealso See [`scale_point_color_hue()`] for specific scales for point aesthetics
-#' and [`scale_discrete_manual()`] for a general discrete scale.
+#' and [ggplot2::scale_discrete_manual()] for a general discrete scale.
 #' @examples
 #' library(ggplot2)
 #'
@@ -30,37 +30,37 @@
 #' @aliases NULL
 NULL
 
-#' `scale_vline_linetype()`: Equivalent to [`scale_linetype()`].
+#' `scale_vline_linetype()`: Equivalent to [ggplot2::scale_linetype()].
 #' @rdname scale_vline
 #' @usage NULL
 #' @export
 scale_vline_linetype <- function(..., na.value = "blank", aesthetics = "vline_linetype")
 {
-  discrete_scale(aesthetics, "linetype_d", scales::linetype_pal(),
+  ggplot2::discrete_scale(aesthetics, palette = scales::linetype_pal(),
                  na.value = na.value, ...)
 }
 
-#' `scale_vline_width_continuous()`: Equivalent to [`scale_linewidth_continuous()`].
+#' `scale_vline_width_continuous()`: Equivalent to [ggplot2::scale_linewidth_continuous()].
 #' @rdname scale_vline
 #' @usage NULL
 #' @export
 scale_vline_width_continuous <- function(name = ggplot2::waiver(), breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
                                   limits = NULL, range = c(1, 6),
                                   trans = "identity", guide = "legend", aesthetics = "vline_width") {
-  ggplot2::continuous_scale(aesthetics, "area", scales::area_pal(range), name = name,
+  ggplot2::continuous_scale(aesthetics, palette = scales::area_pal(range), name = name,
                    breaks = breaks, labels = labels, limits = limits, trans = trans,
                    guide = guide)
 }
 
-#' `scale_vline_colour_hue()`: Equivalent to [`scale_colour_hue()`].
+#' `scale_vline_colour_hue()`: Equivalent to [ggplot2::scale_colour_hue()].
 #' @rdname scale_vline
 #' @usage NULL
 #' @export
 scale_vline_colour_hue <- function(..., h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,
                                   direction = 1, na.value = "grey50", aesthetics = "vline_colour")
 {
-  ggplot2::discrete_scale(aesthetics, "hue",
-                          scales::hue_pal(h, c, l, h.start, direction), na.value = na.value, ...)
+  ggplot2::discrete_scale(aesthetics,
+                          palette = scales::hue_pal(h, c, l, h.start, direction), na.value = na.value, ...)
 }
 
 #' @rdname scale_vline
@@ -69,19 +69,19 @@ scale_vline_colour_hue <- function(..., h = c(0, 360) + 15, c = 100, l = 65, h.s
 scale_vline_color_hue <- function(..., h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,
                                   direction = 1, na.value = "grey50", aesthetics = "vline_color")
 {
-  ggplot2::discrete_scale(aesthetics, "hue",
-                          scales::hue_pal(h, c, l, h.start, direction), na.value = na.value, ...)
+  ggplot2::discrete_scale(aesthetics,
+                          palette = scales::hue_pal(h, c, l, h.start, direction), na.value = na.value, ...)
 }
 
 
-#' `scale_vline_colour_gradient()`: Equivalent to [`scale_colour_gradient()`].
+#' `scale_vline_colour_gradient()`: Equivalent to [ggplot2::scale_colour_gradient()].
 #' @rdname scale_vline
 #' @usage NULL
 #' @export
 scale_vline_colour_gradient <- function(..., low = "#132B43", high = "#56B1F7", space = "Lab",
                                         na.value = "grey50", guide = "none", aesthetics = "vline_colour")
 {
-  ggplot2::continuous_scale(aesthetics, "gradient", scales::seq_gradient_pal(low, high, space),
+  ggplot2::continuous_scale(aesthetics, palette = scales::seq_gradient_pal(low, high, space),
                             na.value = na.value, guide = guide, ...)
 }
 
@@ -91,7 +91,7 @@ scale_vline_colour_gradient <- function(..., low = "#132B43", high = "#56B1F7", 
 scale_vline_color_gradient <- function(..., low = "#132B43", high = "#56B1F7", space = "Lab",
                                        na.value = "grey50", guide = "none", aesthetics = "vline_color")
 {
-  ggplot2::continuous_scale(aesthetics, "gradient", scales::seq_gradient_pal(low, high, space),
+  ggplot2::continuous_scale(aesthetics, palette = scales::seq_gradient_pal(low, high, space),
                             na.value = na.value, guide = guide, ...)
 }
 

@@ -8,15 +8,15 @@
 #' The stat [`stat_density_ridges()`] takes advantage of this option to generate ridgeline plots with overlaid
 #' jittered points.
 #'
-#' @param mapping Set of aesthetic mappings created by [`aes()`] or
-#'   [`aes_()`]. If specified and `inherit.aes = TRUE` (the
+#' @param mapping Set of aesthetic mappings created by [ggplot2::aes()].
+#'   If specified and `inherit.aes = TRUE` (the
 #'   default), it is combined with the default mapping at the top level of the
 #'   plot. You must supply `mapping` if there is no plot mapping.
 #' @param data The data to be displayed in this layer. There are three
 #'    options:
 #'
 #'    If `NULL`, the default, the data is inherited from the plot
-#'    data as specified in the call to [`ggplot()`].
+#'    data as specified in the call to `ggplot()`.
 #'
 #'    A `data.frame`, or other object, will override the plot
 #'    data.
@@ -35,7 +35,7 @@
 #'   rather than combining with them.
 #' @param na.rm If `FALSE`, the default, missing values are removed with
 #'   a warning. If `TRUE`, missing values are silently removed.
-#' @param ... other arguments passed on to [`layer()`]. These are
+#' @param ... other arguments passed on to [ggplot2::layer()]. These are
 #'   often aesthetics, used to set an aesthetic to a fixed value, like
 #'   `color = "red"` or `linewidth = 3`. They may also be parameters
 #'   to the paired geom/stat.
@@ -157,7 +157,7 @@ GeomRidgeline <- ggproto("GeomRidgeline", Geom,
       height = grid::unit(1, "npc") - grid::unit(lwd, "mm"),
       gp = grid::gpar(
         col = data$colour,
-        fill = alpha(data$fill, data$alpha),
+        fill = ggplot2::fill_alpha(data$fill, data$alpha),
         lty = data$linetype,
         lwd = lwd * .pt,
         linejoin = "mitre"
@@ -191,7 +191,7 @@ GeomRidgeline <- ggproto("GeomRidgeline", Geom,
             data$point_colour %||% data$point_color %||% data$colour,
             data$point_alpha %||% data$alpha
           ),
-          fill = alpha(
+          fill = ggplot2::fill_alpha(
             data$point_fill %||% data$fill,
             data$point_alpha %||% data$alpha
           ),
@@ -304,7 +304,7 @@ GeomRidgeline <- ggproto("GeomRidgeline", Geom,
                  data$point_colour %||% data$point_color %||% data$colour,
                  data$point_alpha %||% data$alpha
                ),
-               fill = alpha(
+               fill = ggplot2::fill_alpha(
                  data$point_fill %||% data$fill,
                  data$point_alpha %||% data$alpha
                ),
@@ -355,7 +355,7 @@ GeomRidgeline <- ggproto("GeomRidgeline", Geom,
              munched_poly$x, munched_poly$y, id = munched_poly$id,
              default.units = "native",
              gp = grid::gpar(
-               fill = ggplot2::alpha(aes$fill, aes$alpha),
+               fill = ggplot2::fill_alpha(aes$fill, aes$alpha),
                lty = 0)
              )
            )
@@ -377,7 +377,8 @@ GeomRidgeline <- ggproto("GeomRidgeline", Geom,
 #' be provided.
 #'
 #' Note that the default [`stat_density_ridges`] makes joint density estimation across all datasets. This may not generate
-#' the desired result when using faceted plots. As an alternative, you can set `stat = "density"` to use [`stat_density`].
+#' the desired result when using faceted plots. As an alternative, you can set `stat = "density"` to use
+#' [ggplot2::stat_density].
 #' In this case, it is required to add the aesthetic mapping `height = after_stat(density)` (see examples).
 #'
 #' @param panel_scaling If `TRUE`, the default, relative scaling is calculated separately
@@ -390,6 +391,7 @@ GeomRidgeline <- ggproto("GeomRidgeline", Geom,
 #'
 #' * **`x`**
 #' * **`y`**
+#' * `weight` Optional case weights passed to `stats::density` to calculate a weighted density estimate
 #' * `group` Defines the grouping. Not needed if a categorical variable is mapped onto `y`, but needed otherwise. Will typically be the same
 #' variable as is mapped to `y`.
 #' * `height` The height of each ridgeline at the respective x value. Automatically calculated and
@@ -475,7 +477,7 @@ GeomDensityRidges <- ggproto("GeomDensityRidges", GeomRidgeline,
 
   required_aes = c("x", "y", "height"),
 
-  optional_aes = c("point_color", "vline_color", "vline_size", "vline_width"),
+  optional_aes = c("point_color", "vline_color", "vline_size", "vline_width", "weight"),
 
   extra_params = c("na.rm", "panel_scaling"),
 
@@ -590,7 +592,7 @@ GeomDensityRidges2 <- ggproto("GeomDensityRidges2", GeomDensityRidges,
              munched_poly$x, munched_poly$y, id = munched_poly$id,
              default.units = "native",
              gp = grid::gpar(
-             fill = ggplot2::alpha(aes$fill, aes$alpha),
+             fill = ggplot2::fill_alpha(aes$fill, aes$alpha),
              col = aes$colour,
              lwd = aes$linewidth * .pt,
              lty = aes$linetype)

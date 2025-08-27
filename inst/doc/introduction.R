@@ -1,3 +1,7 @@
+## ----echo=FALSE, include=FALSE------------------------------------------------
+library(ggplot2)
+library(ggridges)
+
 ## ----warning = FALSE, message = FALSE-----------------------------------------
 library(ggplot2)
 library(ggridges)
@@ -155,7 +159,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Species, fill = Species)) +
 ggplot(iris, aes(x = Sepal.Length, y = Species)) +
   geom_density_ridges(
     jittered_points = TRUE, quantile_lines = TRUE, scale = 0.9, alpha = 0.7,
-    vline_size = 1, vline_color = "red",
+    vline_width = 1, vline_color = "red",
     point_size = 0.4, point_alpha = 1,
     position = position_raincloud(adjust_vlines = TRUE)
   )
@@ -241,7 +245,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Species)) +
 
 ## ----message=FALSE, fig.width = 6.5-------------------------------------------
  ggplot(diamonds, aes(x = price, y = cut, fill = cut, color = cut)) + 
-   geom_density_ridges(scale = 4, size = 1) + 
+   geom_density_ridges(scale = 4, linewidth = 1) + 
    scale_fill_cyclical(
      name = "Color scheme",
      values = c("blue", "green"), guide = "legend",
@@ -255,7 +259,7 @@ ggplot(iris, aes(x = Sepal.Length, y = Species)) +
 
 ## ----message=FALSE, fig.width = 6.5-------------------------------------------
 ggplot(mpg, aes(x = class, fill = class, color = class)) + 
-  geom_bar(size = 1.5) +
+  geom_bar(linewidth = 1.5) +
   scale_fill_cyclical(
     name = "Color scheme",
     values = c("blue", "green"), guide = "legend",
